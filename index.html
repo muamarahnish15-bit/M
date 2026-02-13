@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Question</title>
+  <title>Love Fun</title>
   <style>
     body {
       text-align: center;
       font-family: Arial;
-      margin-top: 100px;
+      margin: 50px;
+      overflow: hidden;
+      background: #ffe6f0;
     }
 
-    h1 {
+    #question {
       font-size: 40px;
+      margin-bottom: 30px;
     }
 
     button {
@@ -18,58 +21,128 @@
       font-size: 20px;
       margin: 10px;
       cursor: pointer;
-    }
-
-    #yesBtn {
       transition: 0.3s;
+      position: relative;
     }
 
-    #noBtn {
-      transition: 0.3s;
-    }
-
-    #video {
+    #video, #loveMsg {
       display: none;
       margin-top: 30px;
+      width: 80%;
+    }
+
+    #loveMsg {
+      font-size: 50px;
+      color: #ff1a75;
+      animation: floatHearts 1s ease-in-out infinite alternate;
+    }
+
+    /* قلوب الاحتفال */
+    .heart {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: red;
+      clip-path: polygon(50% 0%, 61% 14%, 75% 14%, 85% 25%, 85% 38%, 75% 50%, 50% 80%, 25% 50%, 15% 38%, 15% 25%, 25% 14%, 39% 14%);
+      animation: floatUp 2s linear forwards;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 0.9; }
+      100% { transform: translateY(-300px) scale(1.5); opacity: 0; }
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes floatHearts {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-20px) scale(1.1); }
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Do you love me?</h1>
+  <h1 id="question">Do you love me?</h1>
 
   <button id="yesBtn">Yes</button>
   <button id="noBtn">No</button>
 
   <div id="video">
-    <video width="400" controls autoplay>
-      <source src="PUT-YOUR-VIDEO-LINK.mp4" type="video/mp4">
+    <video width="80%" autoplay muted controls>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
     </video>
   </div>
 
-  <script>
-    let yesSize = 20;
-    let noSize = 20;
+  <div id="loveMsg">❤️ I Love You ❤️</div>
 
+  <script>
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const video = document.getElementById("video");
+    const question = document.getElementById("question");
+    const loveMsg = document.getElementById("loveMsg");
 
-    noBtn.addEventListener("click", function() {
-      yesSize += 10;
-      noSize -= 5;
+    let yesSize = 20;
+    let clickCount = 0;
 
+    function randomPosition() {
+      const x = Math.random() * (window.innerWidth - yesBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - yesBtn.offsetHeight - 50);
+      return { x, y };
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.top = window.innerHeight + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 2000);
+    }
+
+    noBtn.addEventListener("click", () => {
+      clickCount++;
+      yesSize += 15;
       yesBtn.style.fontSize = yesSize + "px";
-      noBtn.style.fontSize = noSize + "px";
 
-      if (noSize <= 0) {
+      // تحرك Yes لمكان عشوائي
+      const pos = randomPosition();
+      yesBtn.style.position = "absolute";
+      yesBtn.style.left = pos.x + "px";
+      yesBtn.style.top = pos.y + "px";
+
+      // مؤثر قلوب
+      for(let i=0;i<5;i++) createHeart();
+
+      // تلاشي Yes تدريجياً بعد أن تكبر كثير
+      if (yesSize >= 150) {
+        yesBtn.style.animation = "fadeOut 2s forwards";
+      }
+
+      // تختفي No بعد 8 ضغطات
+      if (clickCount >= 8) {
         noBtn.style.display = "none";
       }
     });
 
-    yesBtn.addEventListener("click", function() {
+    yesBtn.addEventListener("click", () => {
+      question.style.display = "none";
+      yesBtn.style.display = "none";
+      noBtn.style.display = "none";
+
+      // إظهار الرسالة والفيديو
+      loveMsg.style.display = "block";
       video.style.display = "block";
+
+      // قلوب مستمرة أثناء الفيديو/الرسالة
+      const heartInterval = setInterval(createHeart, 300);
+      video.onended = () => clearInterval(heartInterval);
     });
   </script>
 

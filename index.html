@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine Surprise</title>
+<title>Safe link</title>
 
 <style>
 body {
@@ -37,26 +37,29 @@ img {
 }
 
 button {
-    padding: 15px 30px;
+    padding: 12px 25px;
     font-size: 18px;
     border: none;
-    border-radius: 50px;
+    border-radius: 25px;
     cursor: pointer;
     position: absolute;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    color: white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: 0.3s;
 }
 
 #yesBtn {
-    background: linear-gradient(45deg, #ff4d6d, #ff758c);
+    background-color: #ff4d6d;
+    color: white;
     left: 50px;
     top: 50px;
 }
 
+#yesBtn:hover {
+    transform: scale(1.1);
+}
+
 #noBtn {
-    background: linear-gradient(45deg, #555, #888);
+    background-color: #555;
+    color: white;
     left: 180px;
     top: 50px;
 }
@@ -88,7 +91,7 @@ button {
 </div>
 
 <!-- 🎵 Romantic Music -->
-<audio id="bgMusic" loop autoplay muted>
+<audio id="bgMusic" loop>
     <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
 </audio>
 
@@ -99,41 +102,25 @@ const gif = document.getElementById("gif");
 const question = document.getElementById("question");
 const music = document.getElementById("bgMusic");
 
-let yesSize = 1; // مقياس التكبير
-let clickCount = 0;
-
-// محاولة تشغيل الموسيقى تلقائياً عند تحميل الصفحة
-window.addEventListener("load", () => {
-    music.play().catch(() => {
-        console.log("Autoplay blocked. Music will play on first interaction.");
-    });
-});
-
-// إزالة mute عند أول تفاعل لتشغيل الموسيقى بصوت
+// محاولة تشغيل الموسيقى عند أول تفاعل
 document.body.addEventListener("click", () => {
-    music.muted = false;
-    music.volume = 1;
+    music.play().catch(() => {});
 });
 
-noBtn.addEventListener("click", () => {
-    clickCount++;
-    yesSize += 0.3;
-    yesBtn.style.transform = `scale(${yesSize})`;
+noBtn.addEventListener("mouseover", () => {
+    const x = Math.random() * 250;
+    const y = Math.random() * 120;
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+});
 
-    // تحريك Yes قليلاً يمين أو يسار
-    const xOffset = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 200);
-    const currentLeft = yesBtn.offsetLeft;
-    yesBtn.style.left = Math.min(Math.max(currentLeft + xOffset, 0), window.innerWidth - yesBtn.offsetWidth) + "px";
-
-    // بعد ما Yes تكبر كثير نختفي No
-    if (yesSize >= 3) {
-        noBtn.style.display = "none";
-    }
+noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
 });
 
 yesBtn.addEventListener("click", () => {
-    question.innerHTML = "YAYYYYY!!! 💕 I love you Mayas!";
     gif.src = "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif";
+    question.innerHTML = "YAYYYYY!!! 💕 I love you Mayas!";
     yesBtn.style.display = "none";
     noBtn.style.display = "none";
     music.volume = 1;

@@ -19,22 +19,11 @@ body {
     text-align: center;
 }
 
-h1 {
-    font-size: 2rem;
-    color: white;
-}
+h1 { font-size: 2rem; color: white; }
 
-img {
-    width: 250px;
-    margin: 20px 0;
-    border-radius: 15px;
-}
+img { width: 250px; margin: 20px 0; border-radius: 15px; }
 
-.buttons {
-    position: relative;
-    width: 300px;
-    height: 150px;
-}
+.buttons { position: relative; width: 300px; height: 150px; }
 
 button {
     padding: 12px 25px;
@@ -46,23 +35,10 @@ button {
     transition: 0.3s;
 }
 
-#yesBtn {
-    background-color: #ff4d6d;
-    color: white;
-    left: 50px;
-    top: 50px;
-}
+#yesBtn { background-color: #ff4d6d; color: white; left: 50px; top: 50px; }
+#yesBtn:hover { transform: scale(1.1); }
 
-#yesBtn:hover {
-    transform: scale(1.1);
-}
-
-#noBtn {
-    background-color: #555;
-    color: white;
-    left: 180px;
-    top: 50px;
-}
+#noBtn { background-color: #555; color: white; left: 180px; top: 50px; }
 
 .confetti {
     position: fixed;
@@ -73,9 +49,7 @@ button {
 }
 
 @keyframes fall {
-    to {
-        transform: translateY(100vh) rotate(360deg);
-    }
+    to { transform: translateY(100vh) rotate(360deg); }
 }
 </style>
 </head>
@@ -91,7 +65,7 @@ button {
 </div>
 
 <!-- 🎵 Romantic Music -->
-<audio id="bgMusic" loop autoplay muted>
+<audio id="bgMusic" loop>
     <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
 </audio>
 
@@ -103,18 +77,14 @@ const question = document.getElementById("question");
 const music = document.getElementById("bgMusic");
 
 let yesScale = 1; // مقياس تكبير كلمة Yes
+let firstClick = false;
 
-// محاولة تشغيل الموسيقى تلقائياً عند تحميل الصفحة
-window.addEventListener("load", () => {
-    music.play().catch(() => {
-        console.log("Autoplay blocked. Music will play on first interaction.");
-    });
-});
-
-// إزالة mute عند أول تفاعل
+// تشغيل الموسيقى عند أول نقرة
 document.body.addEventListener("click", () => {
-    music.muted = false;
-    music.volume = 1;
+    if (!firstClick) {
+        music.play().catch(() => {});
+        firstClick = true;
+    }
 });
 
 // حركة زر No عند المرور
@@ -131,7 +101,6 @@ noBtn.addEventListener("click", (e) => {
     yesScale += 0.3;
     yesBtn.style.transform = `scale(${yesScale})`;
 
-    // بعد ما تكبر كثير تختفي No
     if (yesScale >= 3) {
         noBtn.style.display = "none";
     }

@@ -21,7 +21,7 @@ body {
 
 h1 { font-size: 2rem; color: white; }
 
-img { width: 250px; margin: 20px 0; border-radius: 15px; }
+img { border-radius: 15px; }
 
 .buttons { position: relative; width: 300px; height: 150px; }
 
@@ -69,7 +69,7 @@ button {
 }
 
 #loveGif {
-    width: 200px;
+    width: 350px; /* أكبر حجم */
     display: none;
     margin-bottom: 20px;
     border-radius: 15px;
@@ -91,7 +91,7 @@ button {
     <button id="noBtn">No 😢</button>
 </div>
 
-<!-- GIF حب فوق النص -->
+<!-- GIF حب كبير فوق النص -->
 <img id="loveGif" src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif">
 
 <div id="loveText">
@@ -152,7 +152,7 @@ noBtn.addEventListener("click", (e)=>{
     }
 });
 
-// الضغط على Yes → GIF حب + نص + قلوب + موسيقى رومانسية
+// الضغط على Yes → GIF حب كبير + نص + قلوب + موسيقى رومانسية
 yesBtn.addEventListener("click", ()=>{
     gif.style.display = "none";
     loveGif.style.display = "block";

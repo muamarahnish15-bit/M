@@ -56,10 +56,8 @@ button {
 }
 
 #loveText {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    margin-top: 20px;
     color: white;
     font-size: 1.3rem;
     line-height: 1.6;
@@ -68,6 +66,13 @@ button {
     display: none;
     font-family: 'Georgia', serif;
     text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+}
+
+#loveGif {
+    width: 200px;
+    display: none;
+    margin-bottom: 20px;
+    border-radius: 15px;
 }
 
 @keyframes fall {
@@ -85,6 +90,9 @@ button {
     <button id="yesBtn">Yes 💖</button>
     <button id="noBtn">No 😢</button>
 </div>
+
+<!-- GIF حب فوق النص -->
+<img id="loveGif" src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif">
 
 <div id="loveText">
 Thank you for loving me. Thank you for choosing me, every single day, even when it isn't easy. Thank you for the small things you probably don't even realise matter so much - the way you listen to me, the way you hold me when I'm quiet, the way you make space for my feelings. And thank you for the big things too - for standing by me, for protecting my heart, for being someone I can trust with all of me. You've loved me in ways that healed parts of me I didn't know how to fix. I will never take that for granted. I see you. I appreciate you. And I love you more than words could ever hold.
@@ -107,6 +115,7 @@ const question = document.getElementById("question");
 const music = document.getElementById("bgMusic");
 const loveMusic = document.getElementById("loveMusic");
 const loveText = document.getElementById("loveText");
+const loveGif = document.getElementById("loveGif");
 
 let yesScale = 1;
 let noLeft = noBtn.offsetLeft;
@@ -143,9 +152,10 @@ noBtn.addEventListener("click", (e)=>{
     }
 });
 
-// الضغط على Yes → GIF احتفالي + قلوب + موسيقى حب + نص
+// الضغط على Yes → GIF حب + نص + قلوب + موسيقى رومانسية
 yesBtn.addEventListener("click", ()=>{
-    gif.src = "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif";
+    gif.style.display = "none";
+    loveGif.style.display = "block";
     question.style.display = "none";
     yesBtn.style.display = "none";
     noBtn.style.display = "none";

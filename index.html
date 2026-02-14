@@ -91,7 +91,7 @@ button {
 </div>
 
 <!-- 🎵 Romantic Music -->
-<audio id="bgMusic" loop>
+<audio id="bgMusic" loop autoplay muted>
     <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
 </audio>
 
@@ -102,11 +102,22 @@ const gif = document.getElementById("gif");
 const question = document.getElementById("question");
 const music = document.getElementById("bgMusic");
 
-// محاولة تشغيل الموسيقى عند أول تفاعل
-document.body.addEventListener("click", () => {
-    music.play().catch(() => {});
+let yesScale = 1; // مقياس تكبير كلمة Yes
+
+// محاولة تشغيل الموسيقى تلقائياً عند تحميل الصفحة
+window.addEventListener("load", () => {
+    music.play().catch(() => {
+        console.log("Autoplay blocked. Music will play on first interaction.");
+    });
 });
 
+// إزالة mute عند أول تفاعل
+document.body.addEventListener("click", () => {
+    music.muted = false;
+    music.volume = 1;
+});
+
+// حركة زر No عند المرور
 noBtn.addEventListener("mouseover", () => {
     const x = Math.random() * 250;
     const y = Math.random() * 120;
@@ -114,10 +125,19 @@ noBtn.addEventListener("mouseover", () => {
     noBtn.style.top = y + "px";
 });
 
+// عند الضغط على No → تكبير Yes تدريجياً
 noBtn.addEventListener("click", (e) => {
     e.preventDefault();
+    yesScale += 0.3;
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    // بعد ما تكبر كثير تختفي No
+    if (yesScale >= 3) {
+        noBtn.style.display = "none";
+    }
 });
 
+// الضغط على Yes
 yesBtn.addEventListener("click", () => {
     gif.src = "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif";
     question.innerHTML = "YAYYYYY!!! 💕 I love you Mayas!";
@@ -127,6 +147,7 @@ yesBtn.addEventListener("click", () => {
     launchConfetti();
 });
 
+// الكونفيتي
 function launchConfetti() {
     for (let i = 0; i < 120; i++) {
         const confetti = document.createElement("div");

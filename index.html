@@ -1,150 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Love Fun</title>
-  <style>
-    body {
-      text-align: center;
-      font-family: Arial;
-      margin: 50px;
-      overflow: hidden;
-      background: #ffe6f0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Surprise</title>
 
-    #question {
-      font-size: 40px;
-      margin-bottom: 30px;
-    }
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    overflow: hidden;
+    text-align: center;
+}
 
-    button {
-      padding: 15px 30px;
-      font-size: 20px;
-      margin: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-      position: relative;
-    }
+h1 {
+    font-size: 2rem;
+    color: white;
+}
 
-    #video, #loveMsg {
-      display: none;
-      margin-top: 30px;
-      width: 80%;
-    }
+img {
+    width: 250px;
+    margin: 20px 0;
+    border-radius: 15px;
+}
 
-    #loveMsg {
-      font-size: 50px;
-      color: #ff1a75;
-      animation: floatHearts 1s ease-in-out infinite alternate;
-    }
+.buttons {
+    position: relative;
+    width: 300px;
+    height: 150px;
+}
 
-    /* قلوب الاحتفال */
-    .heart {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      background: red;
-      clip-path: polygon(50% 0%, 61% 14%, 75% 14%, 85% 25%, 85% 38%, 75% 50%, 50% 80%, 25% 50%, 15% 38%, 15% 25%, 25% 14%, 39% 14%);
-      animation: floatUp 2s linear forwards;
-      opacity: 0.9;
-      pointer-events: none;
-    }
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    position: absolute;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
 
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(1); opacity: 0.9; }
-      100% { transform: translateY(-300px) scale(1.5); opacity: 0; }
-    }
+#yesBtn {
+    background: linear-gradient(45deg, #ff4d6d, #ff758c);
+    left: 50px;
+    top: 50px;
+}
 
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
-    }
+#noBtn {
+    background: linear-gradient(45deg, #555, #888);
+    left: 180px;
+    top: 50px;
+}
 
-    @keyframes floatHearts {
-      0% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(-20px) scale(1.1); }
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: fall 3s linear infinite;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
     }
-  </style>
+}
+</style>
 </head>
-
 <body>
 
-  <h1 id="question">Do you love me?</h1>
+<h1 id="question">Mayas, will you be my Valentine? 💘</h1>
 
-  <button id="yesBtn">Yes</button>
-  <button id="noBtn">No</button>
+<img id="gif" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
 
-  <div id="video">
-    <video width="80%" autoplay muted controls>
-      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-    </video>
-  </div>
+<div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😢</button>
+</div>
 
-  <div id="loveMsg">❤️ I Love You ❤️</div>
+<!-- 🎵 Romantic Music -->
+<audio id="bgMusic" loop autoplay muted>
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+</audio>
 
-  <script>
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const video = document.getElementById("video");
-    const question = document.getElementById("question");
-    const loveMsg = document.getElementById("loveMsg");
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const gif = document.getElementById("gif");
+const question = document.getElementById("question");
+const music = document.getElementById("bgMusic");
 
-    let yesSize = 20;
-    let clickCount = 0;
+let yesSize = 1; // مقياس التكبير
+let clickCount = 0;
 
-    function randomPosition() {
-      const x = Math.random() * (window.innerWidth - yesBtn.offsetWidth);
-      const y = Math.random() * (window.innerHeight - yesBtn.offsetHeight - 50);
-      return { x, y };
-    }
+// محاولة تشغيل الموسيقى تلقائياً عند تحميل الصفحة
+window.addEventListener("load", () => {
+    music.play().catch(() => {
+        console.log("Autoplay blocked. Music will play on first interaction.");
+    });
+});
 
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.style.left = Math.random() * window.innerWidth + "px";
-      heart.style.top = window.innerHeight + "px";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 2000);
-    }
+// إزالة mute عند أول تفاعل لتشغيل الموسيقى بصوت
+document.body.addEventListener("click", () => {
+    music.muted = false;
+    music.volume = 1;
+});
 
-    noBtn.addEventListener("click", () => {
-      clickCount++;
-      yesSize += 15;
-      yesBtn.style.fontSize = yesSize + "px";
+noBtn.addEventListener("click", () => {
+    clickCount++;
+    yesSize += 0.3;
+    yesBtn.style.transform = `scale(${yesSize})`;
 
-      // تحرك Yes لمكان عشوائي
-      const pos = randomPosition();
-      yesBtn.style.position = "absolute";
-      yesBtn.style.left = pos.x + "px";
-      yesBtn.style.top = pos.y + "px";
+    // تحريك Yes قليلاً يمين أو يسار
+    const xOffset = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 200);
+    const currentLeft = yesBtn.offsetLeft;
+    yesBtn.style.left = Math.min(Math.max(currentLeft + xOffset, 0), window.innerWidth - yesBtn.offsetWidth) + "px";
 
-      // مؤثر قلوب
-      for(let i=0;i<5;i++) createHeart();
-
-      // تلاشي Yes تدريجياً بعد أن تكبر كثير
-      if (yesSize >= 150) {
-        yesBtn.style.animation = "fadeOut 2s forwards";
-      }
-
-      // تختفي No بعد 8 ضغطات
-      if (clickCount >= 8) {
+    // بعد ما Yes تكبر كثير نختفي No
+    if (yesSize >= 3) {
         noBtn.style.display = "none";
-      }
-    });
+    }
+});
 
-    yesBtn.addEventListener("click", () => {
-      question.style.display = "none";
-      yesBtn.style.display = "none";
-      noBtn.style.display = "none";
+yesBtn.addEventListener("click", () => {
+    question.innerHTML = "YAYYYYY!!! 💕 I love you Mayas!";
+    gif.src = "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif";
+    yesBtn.style.display = "none";
+    noBtn.style.display = "none";
+    music.volume = 1;
+    launchConfetti();
+});
 
-      // إظهار الرسالة والفيديو
-      loveMsg.style.display = "block";
-      video.style.display = "block";
-
-      // قلوب مستمرة أثناء الفيديو/الرسالة
-      const heartInterval = setInterval(createHeart, 300);
-      video.onended = () => clearInterval(heartInterval);
-    });
-  </script>
+function launchConfetti() {
+    for (let i = 0; i < 120; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.background = `hsl(${Math.random()*360}, 100%, 50%)`;
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+    }
+}
+</script>
 
 </body>
 </html>

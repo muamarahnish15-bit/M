@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Safe link</title>
+<title>Valentine Surprise</title>
 
 <style>
 body {
@@ -32,7 +32,7 @@ button {
     border-radius: 25px;
     cursor: pointer;
     position: absolute;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
 #yesBtn { background-color: #ff4d6d; color: white; left: 50px; top: 50px; }
@@ -40,14 +40,20 @@ button {
 
 #noBtn { background-color: #555; color: white; left: 180px; top: 50px; }
 
-.confetti {
+.confetti, .heart {
     position: fixed;
-    width: 10px;
-    height: 10px;
-    top: -10px;
+    width: 12px;
+    height: 12px;
+    top: -20px;
     animation: fall 3s linear infinite;
 }
 
+.heart {
+    width: 15px;
+    height: 15px;
+    background: red;
+    clip-path: polygon(50% 0%, 61% 13%, 75% 13%, 88% 25%, 88% 38%, 75% 50%, 50% 75%, 25% 50%, 12% 38%, 12% 25%, 25% 13%, 39% 13%);
+}
 @keyframes fall {
     to { transform: translateY(100vh) rotate(360deg); }
 }
@@ -64,9 +70,12 @@ button {
     <button id="noBtn">No 😢</button>
 </div>
 
-<!-- 🎵 Romantic Music -->
 <audio id="bgMusic" loop>
     <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+</audio>
+
+<audio id="loveMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mp3">
 </audio>
 
 <script>
@@ -75,19 +84,21 @@ const yesBtn = document.getElementById("yesBtn");
 const gif = document.getElementById("gif");
 const question = document.getElementById("question");
 const music = document.getElementById("bgMusic");
+const loveMusic = document.getElementById("loveMusic");
 
-let yesScale = 1; // مقياس تكبير كلمة Yes
+let yesScale = 1;
+let noLeft = noBtn.offsetLeft;
 let firstClick = false;
 
 // تشغيل الموسيقى عند أول نقرة
 document.body.addEventListener("click", () => {
-    if (!firstClick) {
-        music.play().catch(() => {});
+    if(!firstClick){
+        music.play().catch(()=>{});
         firstClick = true;
     }
 });
 
-// حركة زر No عند المرور
+// عند المرور على No (خلي الحركة العادية)
 noBtn.addEventListener("mouseover", () => {
     const x = Math.random() * 250;
     const y = Math.random() * 120;
@@ -95,40 +106,58 @@ noBtn.addEventListener("mouseover", () => {
     noBtn.style.top = y + "px";
 });
 
-// عند الضغط على No → تكبير Yes تدريجياً
-noBtn.addEventListener("click", (e) => {
+// عند الضغط على No → تكبير Yes وتحريك No لليسار تدريجياً
+noBtn.addEventListener("click", (e)=>{
     e.preventDefault();
     yesScale += 0.3;
-    yesBtn.style.transform = `scale(${yesScale})`;
+    yesBtn.style.transform = `scale(${yesScale}px)`;
 
-    if (yesScale >= 3) {
+    noLeft -= 15; // تحريك No لليسار تدريجياً
+    if(noLeft < 0) noLeft = 0;
+    noBtn.style.left = noLeft + "px";
+
+    if(yesScale >= 3){
         noBtn.style.display = "none";
     }
 });
 
-// الضغط على Yes
-yesBtn.addEventListener("click", () => {
+// الضغط على Yes → عرض GIF احتفالي + قلوب + موسيقى حب جديدة
+yesBtn.addEventListener("click", ()=>{
     gif.src = "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif";
     question.innerHTML = "YAYYYYY!!! 💕 I love you Mayas!";
     yesBtn.style.display = "none";
     noBtn.style.display = "none";
-    music.volume = 1;
+    music.pause();
+    loveMusic.play();
+
     launchConfetti();
+    launchHearts();
 });
 
 // الكونفيتي
-function launchConfetti() {
-    for (let i = 0; i < 120; i++) {
+function launchConfetti(){
+    for(let i=0;i<120;i++){
         const confetti = document.createElement("div");
         confetti.classList.add("confetti");
-        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.left = Math.random()*window.innerWidth + "px";
         confetti.style.background = `hsl(${Math.random()*360}, 100%, 50%)`;
-        confetti.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        confetti.style.animationDuration = (Math.random()*3+2) + "s";
         document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 5000);
+        setTimeout(()=>confetti.remove(),5000);
+    }
+}
+
+// القلوب
+function launchHearts(){
+    for(let i=0;i<60;i++){
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.style.left = Math.random()*window.innerWidth + "px";
+        heart.style.animationDuration = (Math.random()*3+2) + "s";
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(),5000);
     }
 }
 </script>
-
 </body>
 </html>
